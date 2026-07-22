@@ -95,8 +95,6 @@ SYMBOLS = {
     "WDC": "NAS",
     "XEL": "NAS",
     "ZS": "NAS",
-
-    # 현재 리스트에 포함되어 있지만 NASDAQ 상장이 아닌 경우
-    "WBD": "NAS",   # NASDAQ
+    "WBD": "NAS",
 
 }
