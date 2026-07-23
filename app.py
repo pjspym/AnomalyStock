@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 import plotly.graph_objects as go
 import requests
@@ -10,6 +12,7 @@ from symbol_name import SYMBOL_NAMES
 
 API_URL = "http://localhost:8000/predict"
 MAX_WATCHLIST = 6
+LOGO_DIR = Path("logos_images")
 
 st.set_page_config(page_title="Nasdaq 100 이상치 탐지", layout="wide")
 
@@ -20,6 +23,12 @@ if "watchlist" not in st.session_state:
     st.session_state.watchlist = []       # 관심종목 순서 리스트 (최대 6개)
 if "results" not in st.session_state:
     st.session_state.results = {}         # {symbol: API 응답 결과}
+
+
+def logo_path(symbol: str) -> str | None:
+    """logos_images/{symbol}.png 경로를 반환 (없으면 None)."""
+    p = LOGO_DIR / f"{symbol}.png"
+    return str(p) if p.exists() else None
 
 
 def fetch_predict(symbol: str) -> dict | None:
@@ -106,13 +115,18 @@ with st.sidebar:
     if st.session_state.watchlist:
         for sym in st.session_state.watchlist:
             with st.container():
-                col1, col2 = st.columns([5, 1])
+                logo_col, name_col, x_col = st.columns([1, 4, 1])
 
-                with col1:
+                with logo_col:
+                    path = logo_path(sym)
+                    if path:
+                        st.image(path, width=28)
+
+                with name_col:
                     name = SYMBOL_NAMES.get(sym, sym)
                     st.markdown(f"**{name} ({sym})**")
 
-                with col2:
+                with x_col:
                     if st.button("✕", key=f"remove_{sym}"):
                         st.session_state.watchlist.remove(sym)
                         st.session_state.results.pop(sym, None)
@@ -156,8 +170,28 @@ if st.session_state.watchlist:
         result = st.session_state.results.get(sym)
 
         with cols[idx % 2]:
-            st.markdown(f"### {sym}")
+            logo_col, title_col = st.columns([0.1, 2], vertical_alignment="top", gap="small")
 
+            with logo_col:
+                path = logo_path(sym)
+                if path:
+                    st.image(path, width=32)
+
+            with title_col:
+                st.markdown(
+                    f"""
+                    <div style="
+                        font-size:28px;
+                        font-weight:700;
+                        line-height:32px;
+                        margin-left:-15px;
+                        padding:0;
+                    ">
+                        {sym}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
             if result is None:
                 st.warning("아직 예측 결과가 없습니다. '전체 새로고침'을 눌러주세요.")
                 continue
