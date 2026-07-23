@@ -27,6 +27,7 @@ collector.py                KIS OAuth, 30분봉 수집기
 train_isolation_forest.py   특징 생성 + Isolation Forest 학습
 api.py                      FastAPI 백엔드 (/predict)
 app.py                      Streamlit 프론트엔드
+download_logos.py           종목별 로고 다운로드
 logos_images/               종목별 로고 (64x64 png, 파일명 = {심볼}.png, 예: AAPL.png)
 data/                       수집된 종목별 CSV, 결과 CSV (자동 생성)
 models/                     학습된 모델 pkl (자동 생성)
