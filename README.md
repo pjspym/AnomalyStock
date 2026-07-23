@@ -27,6 +27,7 @@ collector.py                KIS OAuth, 30분봉 수집기
 train_isolation_forest.py   특징 생성 + Isolation Forest 학습
 api.py                      FastAPI 백엔드 (/predict)
 app.py                      Streamlit 프론트엔드
+logos_images/               종목별 로고 (64x64 png, 파일명 = {심볼}.png, 예: AAPL.png)
 data/                       수집된 종목별 CSV, 결과 CSV (자동 생성)
 models/                     학습된 모델 pkl (자동 생성)
 requirements.txt            프로젝트 실행에 필요한 Python 패키지 목록
@@ -129,7 +130,7 @@ Streamlit으로 프론트엔드를 구현해 백엔드 API와 연동했습니다
 
 ### 4일차 - 하이퍼파라미터 튜닝 및 배포
 
-Isolation Forest의 `contamination`값을 여러차례 조정하며 이상치 탐지 민감도를 튜닝했습니다. FastAPI백엔드와 Streamlit프론트엔드를 각각 Docker이미지로 빌드해 실행환경을 일관되게 구성했습니다. Render를 통해 컨테이너를 배포하여 별도 서버 관리 없이 서비스를 외부에 노출했습니다. 배포 과정에서 발생한 의존성/포트 설정 이슈를 점검하며 안정적으로 서비스가 구동되도록 마무리 했습니다.
+Isolation Forest의 `contamination` 값을 여러 차례 조정하며 이상치 탐지 민감도를 튜닝했습니다. 관심종목과 결과 화면에 종목별 로고(`logos_images/{심볼}.png`)를 표시해 UI 가독성을 개선했습니다. FastAPI 백엔드와 Streamlit 프론트엔드를 각각 Docker 이미지로 빌드해 실행 환경을 일관되게 구성했습니다. Render를 통해 컨테이너를 배포하여 별도 서버 관리 없이 서비스를 외부에 노출했습니다.
 
 ## 알려진 제약 / 참고사항
 
