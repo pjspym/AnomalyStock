@@ -1,16 +1,4 @@
-"""
-train_isolation_forest.py
 
-collector.py가 만든 data/{symbol}.csv 들을 모아
-Isolation Forest로 이상치(anomaly) 탐지 모델을 학습한다.
-
-실행 전 필요한 패키지:
-    pip install scikit-learn joblib matplotlib
-
-사용법:
-    python train_isolation_forest.py
-    python train_isolation_forest.py --plot AAPL   # 특정 종목 이상치 시각화까지
-"""
 from __future__ import annotations
 
 import argparse
@@ -41,13 +29,10 @@ FEATURE_COLS = [
 ]
 
 ROLLING_WINDOW = 20     # 롤링 통계량 윈도우 (30분봉 기준 20개 = 약 10시간)
-CONTAMINATION = 0.02    # 전체 데이터 중 이상치로 볼 비율 (도메인 지식에 맞게 조정 가능)
+CONTAMINATION = 0.015    # 전체 데이터 중 이상치로 볼 비율 (도메인 지식에 맞게 조정 가능)
 
 
-# ==========================================================
 # 1. 데이터 로드
-# ==========================================================
-
 def load_all_symbol_data(data_dir: Path = DATA_DIR) -> pd.DataFrame:
     """data/ 폴더의 종목별 CSV를 전부 읽어 하나의 DataFrame으로 합친다."""
 
@@ -73,11 +58,7 @@ def load_all_symbol_data(data_dir: Path = DATA_DIR) -> pd.DataFrame:
 
     return all_df
 
-
-# ==========================================================
 # 2. 특징 생성
-# ==========================================================
-
 def add_features(df: pd.DataFrame, window: int = ROLLING_WINDOW) -> pd.DataFrame:
     """
     종목별로 스케일에 독립적인 특징을 만든다.
@@ -119,10 +100,7 @@ def add_features(df: pd.DataFrame, window: int = ROLLING_WINDOW) -> pd.DataFrame
     return result
 
 
-# ==========================================================
 # 3. 모델 학습
-# ==========================================================
-
 def train_isolation_forest(
     df: pd.DataFrame,
     feature_cols: List[str] = FEATURE_COLS,
@@ -147,10 +125,7 @@ def train_isolation_forest(
     return model, df
 
 
-# ==========================================================
 # 4. 결과 요약
-# ==========================================================
-
 def summarize_results(df: pd.DataFrame) -> None:
     total = len(df)
     n_anomaly = int(df["is_anomaly"].sum())
@@ -178,10 +153,7 @@ def summarize_results(df: pd.DataFrame) -> None:
     )
 
 
-# ==========================================================
 # 5. (선택) 시각화
-# ==========================================================
-
 def plot_symbol_anomalies(df: pd.DataFrame, symbol: str) -> None:
     try:
         import matplotlib.pyplot as plt
@@ -218,10 +190,6 @@ def plot_symbol_anomalies(df: pd.DataFrame, symbol: str) -> None:
 
     print(f"{symbol} 이상치 시각화 저장: {out_path} (이상치 {len(anomalies)}건)")
 
-
-# ==========================================================
-# Main
-# ==========================================================
 
 def main():
     parser = argparse.ArgumentParser()
@@ -264,8 +232,7 @@ def main():
     target_symbol = args.plot.upper() if args.plot else None
 
     if target_symbol is None:
-        # --plot을 안 줬으면 이상치가 가장 많이 나온 종목을 자동으로 그려서
-        # plots 폴더가 항상 비어있지 않도록 한다.
+        # --plot을 안 줬으면 이상치가 가장 많이 나온 종목을 자동으로 그려서 보여준다.
         counts = result_df.groupby("symbol")["is_anomaly"].sum()
         if counts.empty or counts.max() == 0:
             print("이상치가 하나도 없어 자동 시각화를 생략합니다. "
