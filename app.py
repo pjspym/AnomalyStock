@@ -184,7 +184,7 @@ if st.session_state.watchlist:
                         font-size:28px;
                         font-weight:700;
                         line-height:32px;
-                        margin-left:-15px;
+                        margin-left:0px;
                         padding:0;
                     ">
                         {sym}
