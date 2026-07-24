@@ -48,6 +48,9 @@ Isolation Forest로 이상 패턴을 탐지해 웹에서 확인하는 프로젝�
 - 백엔드: `api.py` (FastAPI)
 - 프론트엔드: `app.py` (Streamlit, 관심종목 위시리스트 + Plotly 캔들차트)
 
+### 배포 링크
+https://anomalystock.onrender.com
+
 ## 사용 기술
 - Python
 - 한국투자증권(KIS) OpenAPI - 데이터 수집
